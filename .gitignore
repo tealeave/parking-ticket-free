@@ -1,3 +1,4 @@
 *.csv
 trash
-
+*.out
+*.err
