@@ -3,7 +3,7 @@
 #SBATCH --job-name=pytorch_parking_job
 #SBATCH -p free-gpu          ## free partition
 #SBATCH --nodes=1            ## use  node, don't ask for multiple
-##SBATCH --ntasks=2          ## ask for 2 tasks CPU
+##SBATCH --ntasks=8          
 #SBATCH --mem=64G
 #SBATCH --gres=gpu:V100:1
 #SBATCH --error=%x.%A.err    ## Slurm error  file, %x - job name, %A job id
@@ -18,6 +18,6 @@
 # module load pytorch/1.11.1
 
 # will need to activate my own python env for deep learning before submitting the job
-source /data/homezvol2/ddlin/mambaforge-pypy3/envs/d2l/lib/python3.9/venv/scripts/common/activate
+# source /data/homezvol2/ddlin/mambaforge-pypy3/envs/d2l/lib/python3.9/venv/scripts/common/activate
 
 python la_parking_torch.py
