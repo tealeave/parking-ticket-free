@@ -22,6 +22,7 @@ import time
 import logging
 
 # Parameters
+logging.basicConfig(filename='training.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 BATCH_SIZE = 1024
 EPOCHS = 10
 LEARNING_RATE = 0.002
