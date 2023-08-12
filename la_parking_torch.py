@@ -19,12 +19,12 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.metrics import precision_score, recall_score
 import time
-import os
+import logging
 
 # Parameters
-BATCH_SIZE = 512
+BATCH_SIZE = 1024
 EPOCHS = 10
-LEARNING_RATE = 0.001
+LEARNING_RATE = 0.002
 DATA_PATH = "/dfs6/pub/ddlin/projects/parking_citation/top10_violations_2020_2022.csv"
 # os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'max_split_size_mb=256,min_split_size_mb=4,not_reuse_first=1'
 
@@ -98,10 +98,15 @@ def evaluate(model, dataloader, device):
 def run():
     start_time = time.time()
 
+    # Log hyperparameters
+    logging.info(f'BATCH_SIZE: {BATCH_SIZE}')
+    logging.info(f'EPOCHS: {EPOCHS}')
+    logging.info(f'LEARNING_RATE: {LEARNING_RATE}')
+
     # Check CUDA availability
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    print(f"CUDA available: {torch.cuda.is_available()}")
-    print(f"Using device: {device}")
+    logging.info(f"CUDA available: {torch.cuda.is_available()}")
+    logging.info(f"Using device: {device}")
 
     X_train, X_test, y_train, y_test = load_data()
     X_train_tensor = torch.tensor(X_train.values, dtype=torch.float32)
@@ -118,7 +123,9 @@ def run():
 
     # Model Definition & Training
     model = SimpleNN(X_train.shape[1], len(set(y_train))).to(device)
-    
+    # Log model architecture
+    logging.info(f'Model architecture: {model}')  
+
     # Use the weights in the loss function
     criterion = nn.CrossEntropyLoss()
     # criterion = nn.CrossEntropyLoss(weight=weights_tensor.to(device))
@@ -133,20 +140,20 @@ def run():
             loss = criterion(outputs, target)
             loss.backward()
             optimizer.step()
-        print(f"Epoch {epoch+1}/{EPOCHS}, Loss: {loss.item()}")
+        logging.info(f"Epoch {epoch+1}/{EPOCHS}, Loss: {loss.item()}")
 
         # Evaluation
         train_accuracy, train_precision, train_recall = evaluate(model, train_loader, device)
-        print(f"Training Accuracy: {train_accuracy:.4f}, Precision: {train_precision:.4f}, Recall: {train_recall:.4f}")
+        logging.info(f"Training Accuracy: {train_accuracy:.4f}, Precision: {train_precision:.4f}, Recall: {train_recall:.4f}")
 
         test_accuracy, test_precision, test_recall = evaluate(model, test_loader, device)
-        print(f"Test Accuracy: {test_accuracy:.4f}, Precision: {test_precision:.4f}, Recall: {test_recall:.4f}")
+        logging.info(f"Test Accuracy: {test_accuracy:.4f}, Precision: {test_precision:.4f}, Recall: {test_recall:.4f}")
 
         # torch.cuda.empty_cache()
 
     end_time = time.time()
     elapsed_time = end_time - start_time
-    print(f"Total execution time: {elapsed_time:.2f} seconds")
+    logging.info(f"Total execution time: {elapsed_time:.2f} seconds")
 
 
 if __name__ == "__main__":
