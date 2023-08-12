@@ -11,7 +11,7 @@
 #SBATCH --mail-type=fail,end
 #SBATCH --mail-user=ddlin@hs.uci.edu
 
-# load modules will actially throw an error
+# load modules will actially throw an error, the gpu node has cuda preloaded
 # module purge
 # module load python/3.10.2
 # module load cuda/11.7.1

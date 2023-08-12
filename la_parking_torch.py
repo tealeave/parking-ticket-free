@@ -20,56 +20,80 @@ from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.metrics import precision_score, recall_score
 import time
 import logging
+import datetime
+
+# logging
+current_time = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+logging.basicConfig(filename=f"training_{current_time}.log", level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Parameters
-logging.basicConfig(filename='training.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 BATCH_SIZE = 1024
 EPOCHS = 10
-LEARNING_RATE = 0.002
+LEARNING_RATE = 0.001
 DATA_PATH = "/dfs6/pub/ddlin/projects/parking_citation/top10_violations_2020_2022.csv"
-# os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'max_split_size_mb=256,min_split_size_mb=4,not_reuse_first=1'
 
-# # The counts from your awk command
-# counts = {
-#     "NO PARK/STREET CLEAN": 1192320,
-#     "METER EXP.": 830813,
-#     "RED ZONE": 524986,
-#     "PREFERENTIAL PARKING": 360569,
-#     "DISPLAY OF TABS": 276076,
-#     "NO PARKING": 191136,
-#     "DISPLAY OF PLATES": 153174,
-#     "PARKED OVER TIME LIMIT": 111974,
-#     "NO STOP/STANDING": 109257,
-#     "STANDNG IN ALLEY": 89263
-# }
 
-# total_samples = sum(counts.values())
-# num_classes = len(counts)
-# class_weights = {cls: total_samples / (num_classes * count) for cls, count in counts.items()}
+# The top 10 citations, these are unbalanced classes
+counts = {
+    "NO PARK/STREET CLEAN": 1192320,
+    "METER EXP.": 830813,
+    "RED ZONE": 524986,
+    "PREFERENTIAL PARKING": 360569,
+    "DISPLAY OF TABS": 276076,
+    "NO PARKING": 191136,
+    "DISPLAY OF PLATES": 153174,
+    "PARKED OVER TIME LIMIT": 111974,
+    "NO STOP/STANDING": 109257,
+    "STANDNG IN ALLEY": 89263
+}
 
-# # Convert class_weights dictionary to a tensor in the correct order for the dataset
-# weights_tensor = torch.tensor([class_weights[cls] for cls in sorted(counts.keys())])
+total_samples = sum(counts.values())
+num_classes = len(counts)
+class_weights = {cls: total_samples / (num_classes * count) for cls, count in counts.items()}
+
+# Convert class_weights dictionary to a tensor in the correct order for the dataset
+weights_tensor = torch.tensor([class_weights[cls] for cls in sorted(counts.keys())])
 
 class SimpleNN(nn.Module):
-    """A simple feedforward neural network."""
-    def __init__(self, input_dim, output_dim):
+    """A feedforward neural network with dropout."""
+    def __init__(self, input_dim, output_dim, dropout_prob=0.1):
         super(SimpleNN, self).__init__()
-        self.layer1 = nn.Linear(input_dim, 256)
-        self.layer2 = nn.Linear(256, 128)
-        self.layer3 = nn.Linear(128, 64)
-        self.layer4 = nn.Linear(64, output_dim)
+        
+        self.layer1 = nn.Linear(input_dim, 512)
+        self.dropout1 = nn.Dropout(dropout_prob)
+
+        self.layer2 = nn.Linear(512, 256)
+        self.dropout2 = nn.Dropout(dropout_prob)
+
+        self.layer3 = nn.Linear(256, 128)
+        self.dropout3 = nn.Dropout(dropout_prob)
+
+        self.layer4 = nn.Linear(128, 64)
+        self.dropout4 = nn.Dropout(dropout_prob)
+
+        self.layer5 = nn.Linear(64, output_dim)
 
     def forward(self, x):
         x = torch.relu(self.layer1(x))
+        x = self.dropout1(x)
+
         x = torch.relu(self.layer2(x))
+        x = self.dropout2(x)
+
         x = torch.relu(self.layer3(x))
-        x = self.layer4(x)
+        x = self.dropout3(x)
+
+        x = torch.relu(self.layer4(x))
+        x = self.dropout4(x)
+
+        x = self.layer5(x)
         return x
+
 
 def load_data():
     """Loads and preprocesses the dataset."""
     data = pd.read_csv(DATA_PATH)
-    features = ['date of week', 'Issue Hour', 'Cluster']
+    features = ['RP State Plate', 'Make', 'Body Style Description', 'Color Description', 'Agency Description', 'Issue Hour',  'Cluster']
     X = data[features]
     ohe = OneHotEncoder(sparse=False, dtype=int)
     X_encoded = ohe.fit_transform(X)
@@ -127,7 +151,7 @@ def run():
     # Log model architecture
     logging.info(f'Model architecture: {model}')  
 
-    # Use the weights in the loss function
+    # Test if the class weights in the loss function will help 
     criterion = nn.CrossEntropyLoss()
     # criterion = nn.CrossEntropyLoss(weight=weights_tensor.to(device))
 
