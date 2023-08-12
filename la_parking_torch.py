@@ -28,26 +28,26 @@ LEARNING_RATE = 0.001
 DATA_PATH = "/dfs6/pub/ddlin/projects/parking_citation/top10_violations_2020_2022.csv"
 # os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'max_split_size_mb=256,min_split_size_mb=4,not_reuse_first=1'
 
-# The counts from your awk command
-counts = {
-    "NO PARK/STREET CLEAN": 1192320,
-    "METER EXP.": 830813,
-    "RED ZONE": 524986,
-    "PREFERENTIAL PARKING": 360569,
-    "DISPLAY OF TABS": 276076,
-    "NO PARKING": 191136,
-    "DISPLAY OF PLATES": 153174,
-    "PARKED OVER TIME LIMIT": 111974,
-    "NO STOP/STANDING": 109257,
-    "STANDNG IN ALLEY": 89263
-}
+# # The counts from your awk command
+# counts = {
+#     "NO PARK/STREET CLEAN": 1192320,
+#     "METER EXP.": 830813,
+#     "RED ZONE": 524986,
+#     "PREFERENTIAL PARKING": 360569,
+#     "DISPLAY OF TABS": 276076,
+#     "NO PARKING": 191136,
+#     "DISPLAY OF PLATES": 153174,
+#     "PARKED OVER TIME LIMIT": 111974,
+#     "NO STOP/STANDING": 109257,
+#     "STANDNG IN ALLEY": 89263
+# }
 
-total_samples = sum(counts.values())
-num_classes = len(counts)
-class_weights = {cls: total_samples / (num_classes * count) for cls, count in counts.items()}
+# total_samples = sum(counts.values())
+# num_classes = len(counts)
+# class_weights = {cls: total_samples / (num_classes * count) for cls, count in counts.items()}
 
-# Convert class_weights dictionary to a tensor in the correct order for the dataset
-weights_tensor = torch.tensor([class_weights[cls] for cls in sorted(counts.keys())])
+# # Convert class_weights dictionary to a tensor in the correct order for the dataset
+# weights_tensor = torch.tensor([class_weights[cls] for cls in sorted(counts.keys())])
 
 class SimpleNN(nn.Module):
     """A simple feedforward neural network."""
@@ -118,9 +118,11 @@ def run():
 
     # Model Definition & Training
     model = SimpleNN(X_train.shape[1], len(set(y_train))).to(device)
+    
     # Use the weights in the loss function
-    # criterion = nn.CrossEntropyLoss()
-    criterion = nn.CrossEntropyLoss(weight=weights_tensor.to(device))
+    criterion = nn.CrossEntropyLoss()
+    # criterion = nn.CrossEntropyLoss(weight=weights_tensor.to(device))
+
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
     for epoch in range(EPOCHS):
