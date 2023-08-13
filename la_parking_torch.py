@@ -14,6 +14,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import torch.nn.functional as F
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
@@ -27,7 +28,7 @@ current_time = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 logging.basicConfig(filename=f"training_{current_time}.log", level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Parameters
-BATCH_SIZE = 1024
+BATCH_SIZE = 256
 EPOCHS = 10
 LEARNING_RATE = 0.001
 DATA_PATH = "/dfs6/pub/ddlin/projects/parking_citation/top10_violations_2020_2022.csv"
@@ -55,45 +56,28 @@ class_weights = {cls: total_samples / (num_classes * count) for cls, count in co
 weights_tensor = torch.tensor([class_weights[cls] for cls in sorted(counts.keys())])
 
 class SimpleNN(nn.Module):
-    """A feedforward neural network with dropout."""
-    def __init__(self, input_dim, output_dim, dropout_prob=0.1):
+    """A feedforward neural network with GELU activation."""
+    def __init__(self, input_dim, output_dim):
         super(SimpleNN, self).__init__()
         
         self.layer1 = nn.Linear(input_dim, 512)
-        self.dropout1 = nn.Dropout(dropout_prob)
-
         self.layer2 = nn.Linear(512, 256)
-        self.dropout2 = nn.Dropout(dropout_prob)
-
         self.layer3 = nn.Linear(256, 128)
-        self.dropout3 = nn.Dropout(dropout_prob)
-
         self.layer4 = nn.Linear(128, 64)
-        self.dropout4 = nn.Dropout(dropout_prob)
-
         self.layer5 = nn.Linear(64, output_dim)
 
     def forward(self, x):
-        x = torch.relu(self.layer1(x))
-        x = self.dropout1(x)
-
-        x = torch.relu(self.layer2(x))
-        x = self.dropout2(x)
-
-        x = torch.relu(self.layer3(x))
-        x = self.dropout3(x)
-
-        x = torch.relu(self.layer4(x))
-        x = self.dropout4(x)
-
+        x = F.gelu(self.layer1(x))
+        x = F.gelu(self.layer2(x))
+        x = F.gelu(self.layer3(x))
+        x = F.gelu(self.layer4(x))
         x = self.layer5(x)
         return x
-
 
 def load_data():
     """Loads and preprocesses the dataset."""
     data = pd.read_csv(DATA_PATH)
-    features = ['RP State Plate', 'Make', 'Body Style Description', 'Color Description', 'Agency Description', 'Issue Hour',  'Cluster']
+    features = ['date of week', 'Agency Description', 'Issue Hour',  'Cluster']
     X = data[features]
     ohe = OneHotEncoder(sparse=False, dtype=int)
     X_encoded = ohe.fit_transform(X)
@@ -158,6 +142,7 @@ def run():
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
     for epoch in range(EPOCHS):
+        # Training
         for data, target in train_loader:
             data, target = data.to(device), target.to(device)  # Move batch to GPU
             optimizer.zero_grad()

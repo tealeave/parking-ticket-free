@@ -2,7 +2,7 @@ import pandas as pd
 import datetime as DT
 import numpy as np
 import pyproj
-from sklearn.cluster import KMeans
+from sklearn.cluster import KMeans, DBSCAN
 import matplotlib.pyplot as plt
 import seaborn as sns
 import logging
@@ -10,10 +10,16 @@ from datetime import datetime
 
 # Parameters
 DATA = '../parking_citation_2020_2022.csv'
-NUM_CLUSTERS = 1500
 OUTPUT_CLUSTER_IMG = 'cluster.png'
 CLEANED_CSV = '../cleaned_2020_2022_parking_citation.csv'
 TOP10_VIOLATIONS_CSV = '../top10_violations_2020_2022.csv'
+
+# Param for Kmeas
+NUM_CLUSTERS = 1500
+
+# Param for Density-Based Spatial Clustering of Applications with Noise, SBSCAN
+EPS = 0.005  # The maximum distance between two samples for one to be considered as in the neighborhood of the other
+MIN_SAMPLES = 100  # The number of samples in a neighborhood for a point to be considered as a core point
 
 # Set up logging
 log_filename = f"parsing_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
@@ -38,12 +44,14 @@ def run():
     # updating formatting so that I can translate issue date to datetime
     df['Issue Date'] = df[df['Issue Date'].notnull()]['Issue Date'].apply(lambda x: x.split('T')[0])
     df['Issue Date'] = pd.to_datetime(df['Issue Date'], infer_datetime_format=True)
+    df['Day of Week'] = df['Issue Date'].dt.day_name()
 
     # pad anything that is less than 4 digits then isolate just the hours
     df['Issue time'] = df['Issue time'].astype(str)
     df['Issue time'] = df['Issue time'].apply(lambda x: x.split('.')[0])
     df['Issue time'] = df[df['Issue time'].notnull()]['Issue time'].apply(lambda x: x.zfill(4))
     df['Issue Hour'] = df[df['Issue time']!='0nan']['Issue time'].apply(lambda x: DT.datetime.strptime(x, '%H%M').hour)
+    
 
     # clean lat lon data
     df['Latitude'] = np.where(df['Latitude'] == 99999.000, np.nan, df['Latitude'])
@@ -52,7 +60,7 @@ def run():
     # string for ticket number
     df['Ticket number'] = df['Ticket number'].astype(str)
 
-    # Updating the Lat Lon
+    # Updating the Lat Lon from regional Lambert Conformal Conic projection to a global WGS 84 (latitude-longitude) 
     pm = '+proj=lcc +lat_1=34.03333333333333 +lat_2=35.46666666666667 +lat_0=33.5 +lon_0=-118 +x_0=2000000 +y_0=500000.0000000002 +ellps=GRS80 +datum=NAD83 +to_meter=0.3048006096012192 +no_defs'
     x1m, y1m = df['Latitude'].values, df['Longitude'].values
     x2m, y2m = pyproj.transform(pyproj.Proj(pm, preserve_units=True), pyproj.Proj("+init=epsg:4326"), x1m, y1m)
@@ -67,6 +75,11 @@ def run():
     coordinates = data_df[['Latitude', 'Longitude']].values
     kmeans = KMeans(n_clusters=NUM_CLUSTERS, random_state=0).fit(coordinates)
     data_df['Cluster'] = kmeans.labels_
+
+    # # Grid-based clustering using DBSCAN
+    # coordinates = data_df[['Latitude', 'Longitude']].values
+    # dbscan = DBSCAN(eps=EPS, min_samples=MIN_SAMPLES).fit(coordinates)
+    # data_df['Cluster'] = dbscan.labels_
     
     logging.info("Clustering done.")
     
