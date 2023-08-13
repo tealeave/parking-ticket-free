@@ -68,7 +68,7 @@ def run():
     df['Longitude'] = y2m
 
     # With some preliminary result from training, I selected these features to better manage the memory use in the training script
-    data_df = df[['RP State Plate', 'Make', 'Body Style Description', 'Color Description', 'Agency Description', 'Issue Hour', 'Latitude', 'Longitude', 'Violation Description']]
+    data_df = df[['Day of Week','RP State Plate', 'Make', 'Body Style Description', 'Color Description', 'Agency Description', 'Issue Hour', 'Latitude', 'Longitude', 'Violation Description']]
     data_df = data_df[~data_df.isna().any(axis=1) & (data_df.Longitude < 44)]
 
     # KMeans clustering. Maybe try Grid-based clustering later?

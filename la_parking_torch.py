@@ -77,7 +77,7 @@ class SimpleNN(nn.Module):
 def load_data():
     """Loads and preprocesses the dataset."""
     data = pd.read_csv(DATA_PATH)
-    features = ['date of week', 'Agency Description', 'Issue Hour',  'Cluster']
+    features = ['Agency Description', 'Day of Week' , 'Issue Hour',  'Cluster']
     X = data[features]
     ohe = OneHotEncoder(sparse=False, dtype=int)
     X_encoded = ohe.fit_transform(X)
