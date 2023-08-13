@@ -3,3 +3,4 @@ trash
 *.out
 *.err
 *.log
+temp/
