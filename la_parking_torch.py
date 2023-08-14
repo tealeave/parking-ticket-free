@@ -18,7 +18,6 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
-from sklearn.metrics import precision_score, recall_score
 import time
 import logging
 import datetime
@@ -28,8 +27,8 @@ current_time = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 logging.basicConfig(filename=f"training_{current_time}.log", level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Parameters
-BATCH_SIZE = 512
-EPOCHS = 10
+BATCH_SIZE = 1024
+EPOCHS = 5
 LEARNING_RATE = 0.002
 DATA_PATH = "/dfs6/pub/ddlin/projects/parking_citation/top10_violations_2020_2022_km3000.csv"
 
@@ -164,8 +163,8 @@ def run():
     for epoch in range(EPOCHS):
         # Training
         for data, target in train_loader:
-            logging.info(f"data dimensions: {data.size()}")
-            logging.info(f"target dimensions: {target.size()}")
+            logging.debug(f"data dimensions: {data.size()}")
+            logging.debug(f"target dimensions: {target.size()}")
             data, target = data.to(device), target.to(device)  # Move batch to GPU
             optimizer.zero_grad()
             outputs = model(data)

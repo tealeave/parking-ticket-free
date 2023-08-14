@@ -2,6 +2,5 @@
 trash
 *.out
 *.err
-*.log
 temp/
 trash/

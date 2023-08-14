@@ -1,0 +1,42 @@
+2023-08-12 01:35:05,930 - INFO - BATCH_SIZE: 1024
+2023-08-12 01:35:05,930 - INFO - EPOCHS: 10
+2023-08-12 01:35:05,930 - INFO - LEARNING_RATE: 0.002
+2023-08-12 01:35:05,931 - INFO - CUDA available: True
+2023-08-12 01:35:05,931 - INFO - Using device: cuda:0
+2023-08-12 01:35:31,260 - INFO - Model architecture: SimpleNN(
+  (layer1): Linear(in_features=831, out_features=256, bias=True)
+  (layer2): Linear(in_features=256, out_features=128, bias=True)
+  (layer3): Linear(in_features=128, out_features=64, bias=True)
+  (layer4): Linear(in_features=64, out_features=10, bias=True)
+)
+2023-08-12 01:36:00,787 - INFO - Epoch 1/10, Loss: 1.0145463943481445
+2023-08-12 01:36:33,963 - INFO - Training Accuracy: 0.6956, Precision: 0.5766, Recall: 0.4713
+2023-08-12 01:36:41,554 - INFO - Test Accuracy: 0.6937, Precision: 0.5277, Recall: 0.4685
+2023-08-12 01:37:10,660 - INFO - Epoch 2/10, Loss: 0.9137698411941528
+2023-08-12 01:37:43,795 - INFO - Training Accuracy: 0.6995, Precision: 0.5686, Recall: 0.4751
+2023-08-12 01:37:51,230 - INFO - Test Accuracy: 0.6968, Precision: 0.5334, Recall: 0.4708
+2023-08-12 01:38:20,295 - INFO - Epoch 3/10, Loss: 0.9754446148872375
+2023-08-12 01:38:54,541 - INFO - Training Accuracy: 0.7018, Precision: 0.5798, Recall: 0.4846
+2023-08-12 01:39:02,049 - INFO - Test Accuracy: 0.6978, Precision: 0.5578, Recall: 0.4784
+2023-08-12 01:39:31,180 - INFO - Epoch 4/10, Loss: 0.9242013692855835
+2023-08-12 01:40:05,124 - INFO - Training Accuracy: 0.7031, Precision: 0.6040, Recall: 0.4869
+2023-08-12 01:40:12,494 - INFO - Test Accuracy: 0.6991, Precision: 0.5807, Recall: 0.4802
+2023-08-12 01:40:41,610 - INFO - Epoch 5/10, Loss: 0.9730173945426941
+2023-08-12 01:41:15,065 - INFO - Training Accuracy: 0.7043, Precision: 0.6044, Recall: 0.4902
+2023-08-12 01:41:23,080 - INFO - Test Accuracy: 0.6997, Precision: 0.5740, Recall: 0.4827
+2023-08-12 01:41:52,185 - INFO - Epoch 6/10, Loss: 0.9914928078651428
+2023-08-12 01:42:26,357 - INFO - Training Accuracy: 0.7047, Precision: 0.5977, Recall: 0.5016
+2023-08-12 01:42:33,853 - INFO - Test Accuracy: 0.6991, Precision: 0.5684, Recall: 0.4921
+2023-08-12 01:43:03,220 - INFO - Epoch 7/10, Loss: 0.8898261189460754
+2023-08-12 01:43:36,806 - INFO - Training Accuracy: 0.7056, Precision: 0.5992, Recall: 0.4918
+2023-08-12 01:43:44,368 - INFO - Test Accuracy: 0.7001, Precision: 0.5741, Recall: 0.4817
+2023-08-12 01:44:13,187 - INFO - Epoch 8/10, Loss: 0.9389232397079468
+2023-08-12 01:44:47,212 - INFO - Training Accuracy: 0.7066, Precision: 0.6001, Recall: 0.4995
+2023-08-12 01:44:54,671 - INFO - Test Accuracy: 0.7007, Precision: 0.5661, Recall: 0.4889
+2023-08-12 01:45:23,535 - INFO - Epoch 9/10, Loss: 0.8464990258216858
+2023-08-12 01:45:56,769 - INFO - Training Accuracy: 0.7068, Precision: 0.6114, Recall: 0.4938
+2023-08-12 01:46:04,268 - INFO - Test Accuracy: 0.7006, Precision: 0.5796, Recall: 0.4832
+2023-08-12 01:46:33,048 - INFO - Epoch 10/10, Loss: 0.9399921894073486
+2023-08-12 01:47:07,181 - INFO - Training Accuracy: 0.7072, Precision: 0.6170, Recall: 0.4999
+2023-08-12 01:47:14,913 - INFO - Test Accuracy: 0.7006, Precision: 0.5882, Recall: 0.4887
+2023-08-12 01:47:14,913 - INFO - Total execution time: 728.98 seconds
