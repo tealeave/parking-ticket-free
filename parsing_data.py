@@ -8,18 +8,18 @@ import seaborn as sns
 import logging
 from datetime import datetime
 
-# Parameters
-DATA = '../parking_citation_2020_2022.csv'
-OUTPUT_CLUSTER_IMG = 'cluster.png'
-CLEANED_CSV = '../cleaned_2020_2022_parking_citation.csv'
-TOP10_VIOLATIONS_CSV = '../top10_violations_2020_2022.csv'
-
-# Param for Kmeas
-NUM_CLUSTERS = 1500
+# Param for Kmeans
+NUM_CLUSTERS = 3000
 
 # Param for Density-Based Spatial Clustering of Applications with Noise, SBSCAN
 EPS = 0.005  # The maximum distance between two samples for one to be considered as in the neighborhood of the other
 MIN_SAMPLES = 100  # The number of samples in a neighborhood for a point to be considered as a core point
+
+# Parameters
+DATA = '../parking_citation_2020_2022.csv'
+OUTPUT_CLUSTER_IMG = f'cluster_km{str(NUM_CLUSTERS)}.png'
+CLEANED_CSV = f'../cleaned_2020_2022_parking_citation_km{str(NUM_CLUSTERS)}.csv'
+TOP10_VIOLATIONS_CSV = f'../top10_violations_2020_2022_km{str(NUM_CLUSTERS)}.csv'
 
 # Set up logging
 log_filename = f"parsing_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"

@@ -4,7 +4,7 @@
 #SBATCH -p free-gpu          ## free partition
 #SBATCH --nodes=1            ## use  node, don't ask for multiple
 ## BATCH --ntasks=6          
-#SBATCH --mem=96G
+#SBATCH --mem=288G
 #SBATCH --gres=gpu:V100:1
 #SBATCH --error=%x.%A.err    ## Slurm error  file, %x - job name, %A job id
 #SBATCH --out=%x.%A.out      ## Slurm output file, %x - job name, %A job id
