@@ -43,16 +43,6 @@ A collection of scripts to analyze parking citation data from Los Angeles city's
 
 ## Usage
 
-### Neural Network Training
-
-This script trains a neural network model (mlp) on parking citation data using PyTorch.
-
-1. Adjust the parameters in the script to point to your data and desired configurations.
-2. Run the script:
-   ```bash
-   python la_parking_torch.py
-   ```
-
 ### Data Parsing and Clustering
 
 This script parses the parking citation data, converts the coordinates from regional Lambert Conformal Conic projection to WGS 84, and clusters the data using KMeans.
@@ -61,6 +51,16 @@ This script parses the parking citation data, converts the coordinates from regi
 2. Run the script:
    ```bash
    python parsing_data.py
+   ```
+
+### Neural Network Training
+
+This script trains a neural network model (mlp) on parking citation data using PyTorch.
+
+1. Adjust the parameters in the script to point to your data and desired configurations.
+2. Run the script:
+   ```bash
+   python la_parking_torch.py
    ```
 
 ## Contributing
