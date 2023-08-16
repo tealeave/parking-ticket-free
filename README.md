@@ -47,8 +47,7 @@ A collection of scripts to analyze parking citation data from Los Angeles city's
 
 This script parses the parking citation data, converts the coordinates from regional Lambert Conformal Conic projection to WGS 84, and clusters the data using KMeans.
 
-1. Adjust the parameters in the script to point to your data and desired configurations.
-2. Run the script:
+1. Run the script:
    ```bash
    python parsing_data.py
    ```
@@ -57,7 +56,7 @@ This script parses the parking citation data, converts the coordinates from regi
 
 This script trains a neural network model (mlp) on parking citation data using PyTorch.
 
-1. Adjust the parameters in the script to point to your data and desired configurations.
+1. Adjust the hyperparameters in the script to point to your data and desired configurations.
 2. Run the script:
    ```bash
    python la_parking_torch.py
