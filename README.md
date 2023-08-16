@@ -32,8 +32,8 @@ A collection of scripts to analyze parking citation data from Los Angeles city's
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/your_username/LA_Parking_Citation_Analysis.git
-   cd LA_Parking_Citation_Analysis
+   git clone git@github.com:tealeave/parking-ticket-free.git
+   cd parking-ticket-free
    ```
 
 2. Install the required packages:
@@ -45,7 +45,7 @@ A collection of scripts to analyze parking citation data from Los Angeles city's
 
 ### Neural Network Training
 
-This script trains a neural network model on parking citation data using PyTorch.
+This script trains a neural network model (mlp) on parking citation data using PyTorch.
 
 1. Adjust the parameters in the script to point to your data and desired configurations.
 2. Run the script:
@@ -74,8 +74,3 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 ## Acknowledgments
 
 - Thanks to the Los Angeles city for providing the parking citation data.
-- Thanks to the developers of the utilized Python libraries.
-
----
-
-Feel free to adjust the content as needed to better fit your project and preferences!
